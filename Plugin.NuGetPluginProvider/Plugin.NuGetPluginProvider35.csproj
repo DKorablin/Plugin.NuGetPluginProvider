@@ -1,0 +1,112 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <!--This to lines are added to separate build process between .NET & .NET Standart-->
+    <BaseOutputPath>$(MSBuildProjectDirectory)/../obj/net20/$(MSBuildProjectName)/bin</BaseOutputPath>
+    <BaseIntermediateOutputPath>$(MSBuildProjectDirectory)/../obj/net20/$(MSBuildProjectName)/obj</BaseIntermediateOutputPath>
+    <Version Condition="'$(Version)' == ''">0.2.0.0</Version>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{0C4ECC02-9A3A-481E-BB26-0F73F2474AE9}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Plugin.NuGetPluginProvider</RootNamespace>
+    <AssemblyName>Plugin.NuGetPluginProvider</AssemblyName>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>..\..\bin\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <DebugSymbols>true</DebugSymbols>
+    <SignAssembly>true</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>..\..\bin\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="ICSharpCode.SharpZipLib, Version=0.86.0.518, Culture=neutral, PublicKeyToken=1b03e6acf1164f73, processorArchitecture=MSIL">
+      <HintPath>..\packages\SharpZipLib.0.86.0\lib\20\ICSharpCode.SharpZipLib.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.13.0.3\lib\net35\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="SAL.Flatbed, Version=1.2.9.2, Culture=neutral, PublicKeyToken=a8ac5fc45c3adb8d, processorArchitecture=MSIL">
+      <HintPath>..\packages\SAL.Flatbed.1.2.9.2\lib\net20\SAL.Flatbed.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.configuration" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.XML" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\Reflection.Shared\AssemblyLoader.cs">
+      <Link>Domain\AssemblyLoader.cs</Link>
+    </Compile>
+    <Compile Include="..\PluginProviders.Shared\FilePluginArgs.cs">
+      <Link>FilePluginArgs.cs</Link>
+    </Compile>
+    <Compile Include="Constant.cs" />
+    <Compile Include="Data\DataBll.cs" />
+    <Compile Include="Data\Json\PluginsItem.cs" />
+    <Compile Include="Data\Json\PluginsRoot.cs" />
+    <Compile Include="Domain\AssemblyAnalyzer.cs" />
+    <Compile Include="Domain\AssemblyAnalyzerBase.cs" />
+    <Compile Include="Domain\AssemblyTypesInfo.cs" />
+    <Compile Include="NuGetClient\Info\Json\InfoDataJson.cs" />
+    <Compile Include="NuGetClient\Info\Json\InfoRootJson.cs" />
+    <Compile Include="NuGetClient\Info\Json\InfoVersionJson.cs" />
+    <Compile Include="NuGetClient\Info\LatestVersionResult.cs" />
+    <Compile Include="NuGetClient\Info\NuGetInfo.cs" />
+    <Compile Include="NuGetClient\Info\Xml\InfoRootXml.cs" />
+    <Compile Include="NuGetClient\JsonRequest.cs" />
+    <Compile Include="NuGetClient\Search\Json\SearchDataJson.cs" />
+    <Compile Include="NuGetClient\Search\Json\SearchRootJson.cs" />
+    <Compile Include="NuGetClient\Search\Json\SearchVersionJson.cs" />
+    <Compile Include="NuGetClient\NuGetDownloader.cs" />
+    <Compile Include="NuGetClient\NuGetPackageEntry.cs" />
+    <Compile Include="NuGetClient\Search\NuGetSearcher.cs" />
+    <Compile Include="NuGetClient\Search\SearchResult.cs" />
+    <Compile Include="NuGetClient\Search\Xml\SearchRootXml.cs" />
+    <Compile Include="Plugin.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Serializer.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="UI\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Target Name="BeforeBuild">
+    <ItemGroup>
+      <AssemblyAttributes Include="AssemblyVersion">
+        <_Parameter1>$(Version)</_Parameter1>
+      </AssemblyAttributes>
+      <AssemblyAttributes Include="AssemblyFileVersion">
+        <_Parameter1>$(Version)</_Parameter1>
+      </AssemblyAttributes>
+      <AssemblyAttributes Include="AssemblyInformationalVersion">
+        <_Parameter1>$(Version)</_Parameter1>
+      </AssemblyAttributes>
+    </ItemGroup>
+    <MakeDir Directories="$(IntermediateOutputPath)" />
+    <WriteCodeFragment Language="C#" OutputFile="$(IntermediateOutputPath)Version.cs" AssemblyAttributes="@(AssemblyAttributes)" />
+    <ItemGroup>
+      <Compile Include="$(IntermediateOutputPath)Version.cs" />
+    </ItemGroup>
+  </Target>
+</Project>
