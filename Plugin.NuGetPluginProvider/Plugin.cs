@@ -12,41 +12,31 @@ namespace Plugin.NuGetPluginProvider
 {
 	public class Plugin : IPluginProvider
 	{
-		#region Fields
-		private readonly FilePluginArgs _args;
-		private readonly IHost _host;
 		private TraceSource _trace;
-		#endregion Fields
 
 		internal TraceSource Trace
 		{
-			get { return this._trace ?? (this._trace = Plugin.CreateTraceSource<Plugin>()); }
+			get => this._trace ?? (this._trace = Plugin.CreateTraceSource<Plugin>());
 		}
 
-		internal IHost Host { get { return this._host; } }
+		internal IHost Host { get; }
 
 		IPluginProvider IPluginProvider.ParentProvider { get; set; }
 
 		/// <summary>Аргументы передаваемые основному приложению</summary>
-		private FilePluginArgs Args { get { return this._args; } }
+		private FilePluginArgs Args { get; }
 
 		public Plugin(IHost host)
 		{
-			this._host = host ?? throw new ArgumentNullException(nameof(host));
-			this._args = new FilePluginArgs();
+			this.Host = host ?? throw new ArgumentNullException(nameof(host));
+			this.Args = new FilePluginArgs();
 		}
 
-		#region IPlugin
 		Boolean IPlugin.OnConnection(ConnectMode mode)
-		{
-			return true;
-		}
+			=> true;
 
 		Boolean IPlugin.OnDisconnection(DisconnectMode mode)
-		{
-			return true;
-		}
-		#endregion IPlugin
+			=> true;
 
 		public void LoadPlugins()
 		{//TODO: Add NuGet Search for plugins
@@ -91,7 +81,7 @@ namespace Plugin.NuGetPluginProvider
 			try
 			{
 				if(info.Types.Length == 0)
-					throw new InvalidOperationException("Types is empty");
+					throw new InvalidOperationException("Types are empty");
 
 				// Проверяем что плагин с таким источником ещё не загружен, если его уже загрузил родительский провайдер.
 				// Загрузка из ФС так что источник должен быть по любому уникальный.

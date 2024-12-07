@@ -70,7 +70,7 @@ namespace Plugin.NuGetPluginProvider.NuGetClient
 				for(Int64 loop = 0; loop < zip.Count; loop++)
 				{
 					ZipEntry entry = zip[(Int32)loop];
-					if(new FilePluginArgs().CheckFileExtension(entry.Name))
+					if(FilePluginArgs.CheckFileExtension(entry.Name))
 						using(Stream zipStream = zip.GetInputStream(entry))
 							yield return new NuGetPackageEntry(entry.ZipFileIndex, entry.Name, StreamToBytes(zipStream));
 				}
