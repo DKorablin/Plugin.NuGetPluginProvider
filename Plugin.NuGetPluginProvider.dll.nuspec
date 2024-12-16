@@ -15,12 +15,12 @@
 		<tags>SAL,Plugin,PluginProvider</tags>
 		<dependencies>
 			<group targetFramework="net20">
-				<dependency id="SAL.Flatbed" version="1.2.9" />
+				<dependency id="SAL.Flatbed" version="1.2.10" />
 				<dependency id="SharpZipLib" version="0.86.0" />
 				<dependency id="Newtonsoft.Json" version="13.0.3" />
 			</group>
 			<group targetFramework="netstandard2.0">
-				<dependency id="SAL.Flatbed" version="1.2.9" />
+				<dependency id="SAL.Flatbed" version="1.2.10" />
 				<dependency id="SharpZipLib" version="1.4.2" />
 				<dependency id="Newtonsoft.Json" version="13.0.3" />
 				<dependency id="System.Configuration.ConfigurationManager" version="9.0.0" />
