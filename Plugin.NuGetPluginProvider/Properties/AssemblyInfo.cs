@@ -7,8 +7,7 @@ using System.Runtime.InteropServices;
 #if NETSTANDARD || NETCOREAPP
 [assembly: AssemblyMetadata("ProjectUrl", "https://github.com/DKorablin/Plugin.NuGetPluginProvider")]
 #else
-[assembly: AssemblyTitle("Plugin.NuGetPluginProvider")]
-[assembly: AssemblyProduct("NuGet plugin provider")]
+[assembly: AssemblyDescription("NuGet plugin provider")]
 [assembly: AssemblyCopyright("Copyright © Danila Korablin 2019-2025")]
 
 #endif
