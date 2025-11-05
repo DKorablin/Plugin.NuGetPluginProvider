@@ -4,3 +4,6 @@
 [submodule "Reflection.Shared"]
 	path = Reflection.Shared
 	url = https://DKorablin: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@github.com/DKorablin/Reflection.Shared.git
+[submodule "Images.Shared"]
+	path = Images.Shared
+	url = https://github.com/DKorablin/Images.Shared
