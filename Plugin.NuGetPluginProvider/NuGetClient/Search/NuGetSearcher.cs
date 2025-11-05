@@ -36,7 +36,7 @@ namespace Plugin.NuGetPluginProvider.NuGetClient.Search
 		public SearchResult SearchTopN(Int32 skip)
 		{
 			if(skip > 0 && this._noSkip)
-				throw new ArgumentException();
+				throw new ArgumentException(nameof(skip));
 
 			Uri absoluteUri = new Uri(this._searchUrl.Replace("{Skip}", skip.ToString()));
 			base.InvokeRequest<SearchRootJson, SearchRootXml>(absoluteUri, out SearchRootJson j, out SearchRootXml x);

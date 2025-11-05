@@ -7,27 +7,27 @@ namespace Plugin.NuGetPluginProvider
 {
 	internal static class Serializer
 	{
-		/// <summary>Десериализовать строку в объект</summary>
-		/// <typeparam name="T">Тип объекта</typeparam>
-		/// <param name="json">Строка в формате JSON</param>
-		/// <returns>Десериализованный объект</returns>
+		/// <summary>Deserialize a string into an object</summary>
+		/// <typeparam name="T">Object type</typeparam>
+		/// <param name="json">String in JSON format</param>
+		/// <returns>Deserialized object</returns>
 		public static T JavaScriptDeserialize<T>(String json)
 			=> String.IsNullOrEmpty(json)
 				? default
 				: (T)JsonConvert.DeserializeObject(json,typeof(T));
 
-		/// <summary>Сериализовать объект</summary>
-		/// <param name="item">Объект для сериализации</param>
-		/// <returns>Строка в формате JSON</returns>
+		/// <summary>Serialize object</summary>
+		/// <param name="item">Object to serialize</param>
+		/// <returns>String in JSON format</returns>
 		public static String JavaScriptSerialize(Object item)
 			=> item == null
 				? null
 				: JsonConvert.SerializeObject(item);
 
-		/// <summary>Десериализовать объект</summary>
-		/// <typeparam name="T">Тип объекта</typeparam>
-		/// <param name="xml">Объект в виде XML</param>
-		/// <returns>Десериализованный объект</returns>
+		/// <summary>Deserialize object</summary>
+		/// <typeparam name="T">Object type</typeparam>
+		/// <param name="xml">Object as XML</param>
+		/// <returns>Deserialized object</returns>
 		public static T XmlDeserialize<T>(String xml)
 		{
 			if(String.IsNullOrEmpty(xml))

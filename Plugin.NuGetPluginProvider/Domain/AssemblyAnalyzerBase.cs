@@ -21,23 +21,23 @@ namespace Plugin.NuGetPluginProvider.Domain
 		{
 			DirectoryInfo directory = new DirectoryInfo(assemblyPath);
 
-			this._reflectionOnlyResolve = (Object s, ResolveEventArgs e) => { return OnReflectionOnlyResolve(e, directory); };
-			this._resolve = (Object s, ResolveEventArgs e) => { return OnResolve(e, directory); };
+			this._reflectionOnlyResolve = (s, e) => this.OnReflectionOnlyResolve(e, directory);
+			this._resolve = (s, e) => this.OnResolve(e, directory);
 
 			AppDomain.CurrentDomain.ReflectionOnlyAssemblyResolve += this._reflectionOnlyResolve;
-			AppDomain.CurrentDomain.AssemblyResolve += this._resolve;//TODO: Попытка загрузить нехватающие сборки
+			AppDomain.CurrentDomain.AssemblyResolve += this._resolve;//TODO: Attempt to download missing assemblies
 		}
 
 		protected void DetachResolveEvents()
 		{
 			AppDomain.CurrentDomain.ReflectionOnlyAssemblyResolve -= this._reflectionOnlyResolve;
-			AppDomain.CurrentDomain.AssemblyResolve -= this._resolve;//TODO: Попытка загрузить нехватающие сборки
+			AppDomain.CurrentDomain.AssemblyResolve -= this._resolve;//TODO: Attempt to download missing assemblies
 		}
 
-		/// <summary>Attempts ReflectionOnlyLoad of current Assemblies dependants</summary>
+		/// <summary>Attempts ReflectionOnlyLoad of current Assemblies dependents</summary>
 		/// <param name="args">ReflectionOnlyAssemblyResolve event args</param>
 		/// <param name="directory">The current Assemblies Directory</param>
-		/// <returns>ReflectionOnlyLoadFrom loaded dependant Assembly</returns>
+		/// <returns>ReflectionOnlyLoadFrom loaded dependent Assembly</returns>
 		private Assembly OnReflectionOnlyResolve(ResolveEventArgs args, DirectoryInfo directory)
 		{
 
@@ -59,7 +59,7 @@ namespace Plugin.NuGetPluginProvider.Domain
 
 		private Assembly OnResolve(ResolveEventArgs args, DirectoryInfo directory)
 		{
-			Assembly loadedAssembly = Array.Find(AppDomain.CurrentDomain.GetAssemblies(), (Assembly asm) => { return String.Equals(asm.FullName, args.Name, StringComparison.OrdinalIgnoreCase); });
+			Assembly loadedAssembly = Array.Find(AppDomain.CurrentDomain.GetAssemblies(), asm => String.Equals(asm.FullName, args.Name, StringComparison.OrdinalIgnoreCase));
 
 			if(loadedAssembly != null)
 				return loadedAssembly;

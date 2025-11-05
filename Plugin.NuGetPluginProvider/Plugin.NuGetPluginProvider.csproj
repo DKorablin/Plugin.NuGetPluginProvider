@@ -1,17 +1,51 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
-		<TargetFramework>netstandard2.0</TargetFramework>
+		<TargetFrameworks>net35;netstandard2.0</TargetFrameworks>
 		<OutputType>Library</OutputType>
 		<RootNamespace>Plugin.NuGetPluginProvider</RootNamespace>
-		<GenerateAssemblyInfo>true</GenerateAssemblyInfo>
-		<Description>NuGet plugin provider</Description>
-		<Copyright>Copyright © Danila Korablin 2019-2025</Copyright>
-		<Configuration>Debug</Configuration>
-		<AssemblyVersion>0.1.*</AssemblyVersion>
-		<FileVersion>0.1.0.0</FileVersion>
+		<Configuration>Release</Configuration>
 		<Deterministic>false</Deterministic>
+		<GenerateAssemblyInfo>False</GenerateAssemblyInfo>
+		<GeneratePackageOnBuild>False</GeneratePackageOnBuild>
+		<GenerateDocumentationFile>False</GenerateDocumentationFile>
 		<CopyLocalLockFileAssemblies>True</CopyLocalLockFileAssemblies>
 	</PropertyGroup>
+
+	<!--nuspec-->
+	<PropertyGroup>
+		<PackageId>AlphaOmega.SAL.Plugin.NuGetPluginProvider</PackageId>
+		<Version>$(Version)</Version>
+		<Title>NuGet plugin provider</Title>
+		<Description></Description>
+		<Authors>Danila Korablin</Authors>
+		<PackageLicenseExpression>MIT</PackageLicenseExpression>
+		<PackageReadmeFile>docs\README.md</PackageReadmeFile>
+		<PackageIcon>docs\SAL.100.png</PackageIcon>
+		<RepositoryUrl>https://github.com/DKorablin/Plugin.NuGetPluginProvider</RepositoryUrl>
+		<PackageTags>SAL;plugin;PluginProvider</PackageTags>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<None Include="..\README.md" Pack="true" PackagePath="\docs" />
+		<None Include="..\Images.Shared\SAL.100.png" Pack="true" PackagePath="\docs" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<AssemblyAttributes Include="AssemblyMetadata" Condition="'$(TargetFramework)'=='net8.0-windows'">
+			<_Parameter1>ProjectUrl</_Parameter1>
+			<_Parameter2>https://github.com/DKorablin/Plugin.NuGetPluginProvider</_Parameter2>
+		</AssemblyAttributes>
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="SAL.Flatbed">
+			<ExcludeAssets>runtime</ExcludeAssets>
+		</PackageReference>
+		<PackageReference Include="System.Configuration.ConfigurationManager" Condition="'$(TargetFramework)'=='netstandard2.0'" />
+		<Reference Include="System.Configuration" Condition="'$(TargetFramework)' == 'net35'" />
+		<PackageReference Include="SharpZipLib" />
+		<PackageReference Include="Newtonsoft.Json" />
+	</ItemGroup>
 
 	<ItemGroup>
 		<Compile Include="..\Reflection.Shared\AssemblyLoader.cs">
@@ -20,14 +54,5 @@
 		<Compile Include="..\PluginProviders.Shared\FilePluginArgs.cs">
 			<Link>FilePluginArgs.cs</Link>
 		</Compile>
-	</ItemGroup>
-	<ItemGroup>
-		<PackageReference Include="SAL.Flatbed" Version="1.2.10">
-			<PrivateAssets>all</PrivateAssets>
-			<ExcludeAssets>runtime</ExcludeAssets>
-		</PackageReference>
-		<PackageReference Include="System.Configuration.ConfigurationManager" Version="7.0.0" />
-		<PackageReference Include="SharpZipLib" Version="1.4.2" />
-		<PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
 	</ItemGroup>
 </Project>

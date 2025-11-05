@@ -48,7 +48,7 @@ namespace Plugin.NuGetPluginProvider.Domain
 							}
 
 							if(types.Count > 0)
-							{//Находим первую подходящую сборку и выходим из Package'а
+							{//Find the first suitable assembly and exit the Package.
 								AssemblyTypesInfo info = new AssemblyTypesInfo(filePath, entry.EntryIndex, types.ToArray());
 								assemblies.Add(info);
 								break;

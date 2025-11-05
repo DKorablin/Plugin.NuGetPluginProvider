@@ -11,7 +11,7 @@ namespace Plugin.NuGetPluginProvider.NuGetClient.Info
 		public NuGetInfo(String infoUrlArgs1)
 		{
 			if(!infoUrlArgs1.Contains("{0}"))
-				throw new ArgumentException();
+				throw new ArgumentException("String should contains '{0}' template",nameof(infoUrlArgs1));
 
 			this._infoUrlArgs1 = infoUrlArgs1;
 		}

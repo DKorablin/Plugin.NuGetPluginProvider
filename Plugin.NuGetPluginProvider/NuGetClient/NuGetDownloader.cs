@@ -28,7 +28,7 @@ namespace Plugin.NuGetPluginProvider.NuGetClient
 						assemblies.Add(runtimeVersion, entry.Payload);
 				}
 
-				if(assemblies.Count > 0)//Нам необходимо найти самую приближённую к текущему рантайму версию, т.к. может попастся не поддерживаемые (.NET Core) или очень старые варианты
+				if(assemblies.Count > 0)//We need to find the version closest to the current runtime, as we may come across unsupported (.NET Core) or very old versions.
 					return assemblies.OrderByDescending(p => p.Key).First(p => p.Key <= currentRuntimeVersion).Value;
 			}
 
