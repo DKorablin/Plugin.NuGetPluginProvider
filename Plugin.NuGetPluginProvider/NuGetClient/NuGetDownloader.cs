@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using System.Net;
 using System.Reflection;
-using ICSharpCode.SharpZipLib.Zip;
 using Plugin.FilePluginProvider;
 
 namespace Plugin.NuGetPluginProvider.NuGetClient
@@ -37,14 +37,11 @@ namespace Plugin.NuGetPluginProvider.NuGetClient
 
 		private Byte[] Download(AssemblyName asmName)
 		{
-			const Int32 MinBufferLength = 1024;
-
 			HttpWebRequest request = (HttpWebRequest)WebRequest.Create(Constant.NuGet.CreateDownloadUrl(asmName));
 			using(HttpWebResponse response = (HttpWebResponse)request.GetResponse())
 			{
 				if(response.StatusCode == HttpStatusCode.OK)
 				{
-					Byte[] buffer = new Byte[4 * MinBufferLength];
 					using(Stream stream = response.GetResponseStream())
 						return StreamToBytes(stream);
 				} else return null;
@@ -65,27 +62,44 @@ namespace Plugin.NuGetPluginProvider.NuGetClient
 
 		public static IEnumerable<NuGetPackageEntry> Extract(Stream stream)
 		{
-			using(ZipFile zip = new ZipFile(stream))
+			List<NuGetPackageEntry> entries = new List<NuGetPackageEntry>();
+			
+			using(ZipArchive zip = new ZipArchive(stream, ZipArchiveMode.Read, leaveOpen: false))
 			{
-				for(Int64 loop = 0; loop < zip.Count; loop++)
+				Int32 index = 0;
+				foreach(ZipArchiveEntry entry in zip.Entries)
 				{
-					ZipEntry entry = zip[(Int32)loop];
-					if(FilePluginArgs.CheckFileExtension(entry.Name))
-						using(Stream zipStream = zip.GetInputStream(entry))
-							yield return new NuGetPackageEntry(entry.ZipFileIndex, entry.Name, StreamToBytes(zipStream));
+					if(FilePluginArgs.CheckFileExtension(entry.FullName))
+					{
+						using(Stream zipStream = entry.Open())
+						{
+							entries.Add(new NuGetPackageEntry(index, entry.FullName, StreamToBytes(zipStream)));
+						}
+					}
+					index++;
 				}
 			}
+			
+			return entries;
 		}
 
 		public static NuGetPackageEntry Extract(String filePath, Int64 index)
 		{
 			using(FileStream stream = new FileStream(filePath, FileMode.Open, FileAccess.Read))
-			using(ZipFile zip = new ZipFile(stream))
+			using(ZipArchive zip = new ZipArchive(stream, ZipArchiveMode.Read))
 			{
-				ZipEntry entry = zip[(Int32)index];
-				if(entry != null)
-					using(Stream zipStream = zip.GetInputStream(entry))
-						return new NuGetPackageEntry(entry.ZipFileIndex, entry.Name, StreamToBytes(zipStream));
+				Int32 currentIndex = 0;
+				foreach(ZipArchiveEntry entry in zip.Entries)
+				{
+					if(currentIndex == index)
+					{
+						using(Stream zipStream = entry.Open())
+						{
+							return new NuGetPackageEntry(index, entry.FullName, StreamToBytes(zipStream));
+						}
+					}
+					currentIndex++;
+				}
 			}
 			return null;
 		}
