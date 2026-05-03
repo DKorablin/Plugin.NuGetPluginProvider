@@ -5,4 +5,3 @@ using System.Runtime.InteropServices;
 [assembly: System.CLSCompliant(true)]
 
 [assembly: AssemblyDescription("NuGet plugin provider")]
-[assembly: AssemblyCopyright("Copyright © Danila Korablin 2019-2025")]

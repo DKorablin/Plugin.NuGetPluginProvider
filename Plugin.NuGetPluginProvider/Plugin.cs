@@ -12,12 +12,7 @@ namespace Plugin.NuGetPluginProvider
 {
 	public class Plugin : IPluginProvider
 	{
-		private TraceSource _trace;
-
-		internal TraceSource Trace
-		{
-			get => this._trace ?? (this._trace = Plugin.CreateTraceSource<Plugin>());
-		}
+		internal ITraceSource Trace { get; }
 
 		internal IHost Host { get; }
 
@@ -26,9 +21,10 @@ namespace Plugin.NuGetPluginProvider
 		/// <summary>Arguments passed to the main application</summary>
 		private FilePluginArgs Args { get; }
 
-		public Plugin(IHost host)
+		public Plugin(IHost host, ITraceSource trace)
 		{
 			this.Host = host ?? throw new ArgumentNullException(nameof(host));
+			this.Trace = trace ?? throw new ArgumentNullException(nameof(trace));
 			this.Args = new FilePluginArgs();
 		}
 
@@ -103,15 +99,6 @@ namespace Plugin.NuGetPluginProvider
 				exc.Data.Add(nameof(info.FileIndex), info.FileIndex);
 				this.Trace.TraceData(TraceEventType.Error, 1, exc);
 			}
-		}
-
-		internal static TraceSource CreateTraceSource<T>(String name = null) where T : IPlugin
-		{
-			TraceSource result = new TraceSource(typeof(T).Assembly.GetName().Name + name);
-			result.Switch.Level = SourceLevels.All;
-			result.Listeners.Remove("Default");
-			result.Listeners.AddRange(System.Diagnostics.Trace.Listeners);
-			return result;
 		}
 	}
 }

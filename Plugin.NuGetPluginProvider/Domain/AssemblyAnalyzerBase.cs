@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Reflection;
 using Plugin.FilePluginProvider;
+using SAL.Flatbed;
 
 namespace Plugin.NuGetPluginProvider.Domain
 {
@@ -15,7 +16,7 @@ namespace Plugin.NuGetPluginProvider.Domain
 
 		private ResolveEventHandler _resolve;
 
-		protected internal TraceSource Trace { get => this._trace ?? (this._trace = Plugin.CreateTraceSource<Plugin>(".AssemblyAnalyzer")); }
+		protected internal TraceSource Trace { get => this._trace ?? (this._trace = AssemblyAnalyzerBase.CreateTraceSource<Plugin>(".AssemblyAnalyzer")); }
 
 		protected void AttachResolveEvents(String assemblyPath)
 		{
@@ -41,7 +42,7 @@ namespace Plugin.NuGetPluginProvider.Domain
 		private Assembly OnReflectionOnlyResolve(ResolveEventArgs args, DirectoryInfo directory)
 		{
 
-			Assembly loadedAssembly = Array.Find(AppDomain.CurrentDomain.ReflectionOnlyGetAssemblies(), (Assembly asm) => { return String.Equals(asm.FullName, args.Name, StringComparison.OrdinalIgnoreCase); });
+			Assembly loadedAssembly = Array.Find(AppDomain.CurrentDomain.ReflectionOnlyGetAssemblies(), (Assembly asm) => String.Equals(asm.FullName, args.Name, StringComparison.OrdinalIgnoreCase));
 
 			if(loadedAssembly != null)
 				return loadedAssembly;
@@ -74,6 +75,15 @@ namespace Plugin.NuGetPluginProvider.Domain
 			}
 
 			return null;//return Assembly.Load(args.Name); - StackOverflowException
+		}
+
+		private static TraceSource CreateTraceSource<T>(String name = null) where T : IPlugin
+		{
+			TraceSource result = new TraceSource(typeof(T).Assembly.GetName().Name + name);
+			result.Switch.Level = SourceLevels.All;
+			result.Listeners.Remove("Default");
+			result.Listeners.AddRange(System.Diagnostics.Trace.Listeners);
+			return result;
 		}
 	}
 }
