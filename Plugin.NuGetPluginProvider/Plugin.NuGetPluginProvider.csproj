@@ -1,10 +1,11 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
-		<TargetFrameworks>net48;netstandard2.0</TargetFrameworks>
+		<TargetFrameworks>net48;net8.0</TargetFrameworks>
 		<OutputType>Library</OutputType>
 		<RootNamespace>Plugin.NuGetPluginProvider</RootNamespace>
 		<Configuration>Release</Configuration>
 		<Deterministic>false</Deterministic>
+		<LangVersion>latest</LangVersion>
 		<GenerateAssemblyInfo>False</GenerateAssemblyInfo>
 		<GeneratePackageOnBuild>False</GeneratePackageOnBuild>
 		<GenerateDocumentationFile>False</GenerateDocumentationFile>
@@ -15,14 +16,14 @@
 	<PropertyGroup>
 		<PackageId>AlphaOmega.SAL.Plugin.NuGetPluginProvider</PackageId>
 		<Version>$(Version)</Version>
-		<Title>NuGet plugin provider</Title>
-		<Description></Description>
+		<Title>SAL NuGet Plugin Provider</Title>
+		<Description>SAL plugin provider that installs and updates plugins from NuGet V3 feeds (nuget.org, GitHub Packages or private feeds). Finds plugins whose SAL.Flatbed/SAL.Windows versions match the running host, downloads them with their dependencies into per-package folders, reports available updates and new plugins, and can download missing strong-named assemblies on demand at runtime. Configured with a JSON manifest. It does not load plugins: loading is left to folder-scanning plugin providers.</Description>
 		<Authors>Danila Korablin</Authors>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 		<PackageReadmeFile>docs\README.md</PackageReadmeFile>
 		<PackageIcon>docs\SAL.100.png</PackageIcon>
 		<RepositoryUrl>https://github.com/DKorablin/Plugin.NuGetPluginProvider</RepositoryUrl>
-		<PackageTags>SAL;plugin;PluginProvider</PackageTags>
+		<PackageTags>SAL;Flatbed;plugin;plugins;PluginProvider;plugin-manager;NuGet;nuget-feed;package-manager;auto-update;updater;dependency-resolution;assembly-resolver;extensibility</PackageTags>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -31,7 +32,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<AssemblyAttributes Include="AssemblyMetadata" Condition="'$(TargetFramework)'=='net8.0-windows'">
+		<AssemblyAttributes Include="AssemblyMetadata" Condition="'$(TargetFramework)'=='net8.0'">
 			<_Parameter1>ProjectUrl</_Parameter1>
 			<_Parameter2>https://github.com/DKorablin/Plugin.NuGetPluginProvider</_Parameter2>
 		</AssemblyAttributes>
@@ -41,17 +42,15 @@
 		<PackageReference Include="SAL.Flatbed">
 			<ExcludeAssets>runtime</ExcludeAssets>
 		</PackageReference>
-		<PackageReference Include="System.Configuration.ConfigurationManager" Condition="'$(TargetFramework)'=='netstandard2.0'" />
+		<PackageReference Include="System.Configuration.ConfigurationManager" Condition="'$(TargetFramework)'=='net8.0'" />
 		<Reference Include="System.Configuration" Condition="'$(TargetFramework)' == 'net48'" />
 		<Reference Include="System.IO.Compression" Condition="'$(TargetFramework)' == 'net48'" />
-		<PackageReference Include="System.IO.Compression.ZipFile" Condition="'$(TargetFramework)'=='netstandard2.0'" />
+		<Reference Include="System.Net.Http" Condition="'$(TargetFramework)' == 'net48'" />
+		<PackageReference Include="NuGet.Protocol" />
 		<PackageReference Include="Newtonsoft.Json" />
 	</ItemGroup>
 
 	<ItemGroup>
-		<Compile Include="..\Reflection.Shared\AssemblyLoader.cs">
-			<Link>Domain\AssemblyLoader.cs</Link>
-		</Compile>
 		<Compile Include="..\PluginProviders.Shared\FilePluginArgs.cs">
 			<Link>FilePluginArgs.cs</Link>
 		</Compile>

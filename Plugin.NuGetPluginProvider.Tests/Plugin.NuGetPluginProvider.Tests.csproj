@@ -1,0 +1,25 @@
+<Project Sdk="Microsoft.NET.Sdk">
+	<PropertyGroup>
+		<TargetFrameworks>net8.0-windows</TargetFrameworks>
+		<IsPackable>False</IsPackable>
+		<IsTestProject>True</IsTestProject>
+		<IsPublishable>False</IsPublishable>
+		<LangVersion>latest</LangVersion>
+		<GenerateAssemblyInfo>False</GenerateAssemblyInfo>
+		<CopyCodeCoverageMetadata>false</CopyCodeCoverageMetadata>
+		<NoWarn>CA1416</NoWarn>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\Plugin.NuGetPluginProvider\Plugin.NuGetPluginProvider.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<!--The host provides SAL.Flatbed at runtime, tests need the assembly itself-->
+		<PackageReference Include="SAL.Flatbed" ExcludeAssets="none" />
+		<PackageReference Include="XUnit" />
+		<PackageReference Include="XUnit.Runner.VisualStudio" />
+		<PackageReference Include="Microsoft.NET.Test.Sdk" />
+		<PackageReference Include="coverlet.collector" />
+	</ItemGroup>
+</Project>
